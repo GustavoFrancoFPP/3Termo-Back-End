@@ -57,19 +57,22 @@
     <!-- Barra de Busca -->
     <div class="bg-gray-800 border-b border-gray-700 p-4">
         <div class="max-w-6xl mx-auto">
-            <form class="flex gap-2" onsubmit="buscarPokemon(event)">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Buscar por ID ou nome..." 
-                    class="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-red-500 focus:outline-none"
-                >
-                <button 
-                    type="submit" 
-                    class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition"
-                >
-                    🔍 Buscar
-                </button>
+            <form class="flex flex-col gap-2" onsubmit="buscarPokemon(event)">
+                <div class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar por ID ou nome (inclui Pokémon customizados)..." 
+                        class="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-red-500 focus:outline-none"
+                    >
+                    <button 
+                        type="submit" 
+                        class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition"
+                    >
+                        🔍 Buscar
+                    </button>
+                </div>
+                <p class="text-xs text-gray-400">💡 Dica: Digite apenas o número para buscar Pokémon customizados por ID (Ex: 9001)</p>
             </form>
         </div>
     </div>
@@ -162,7 +165,12 @@
             <div class="pokemon-panel w-full lg:w-[52%] p-8 flex flex-col justify-between gap-6 h-full min-w-0">
                 <div class="rounded-[2rem] bg-black border-8 border-black/80 p-6 shadow-[inset_0_0_0_6px_rgba(255,255,255,0.06)] flex-1 overflow-hidden">
                     <div id="info-container" class="rounded-[1.5rem] bg-slate-950 p-6 text-slate-200 info-scroll pr-3">
-                        <p class="text-[10px] uppercase tracking-[0.35em] text-red-400">pokedex</p>
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <p class="text-[10px] uppercase tracking-[0.35em] text-red-400">pokedex</p>
+                            @if(isset($pokemon['is_custom']) && $pokemon['is_custom'])
+                                <span class="inline-block bg-blue-500 px-2 py-1 rounded-full text-xs font-semibold">✨ CUSTOMIZADO</span>
+                            @endif
+                        </div>
                         <div class="mt-4 space-y-3 text-sm leading-6">
                             <p class="whitespace-nowrap"><span class="text-green-400">Nº:</span> <span class="text-white">{{ $pokemon['id'] }}</span></p>
                             <p class="whitespace-nowrap"><span class="text-green-400">NOME:</span> <span class="text-white uppercase">{{ $pokemon['name'] }}</span></p>
@@ -182,7 +190,15 @@
                                 <p class="text-[10px] uppercase tracking-[0.35em] text-red-400">habilidades</p>
                                 <ul class="mt-3 space-y-2 text-sm text-white uppercase whitespace-nowrap">
                                     @foreach ($pokemon['abilities'] as $habilidade)
-                                        <li>{{ $habilidade['ability']['name'] }}</li>
+                                        <li>
+                                            @if(is_array($habilidade) && isset($habilidade['ability']))
+                                                {{ $habilidade['ability']['name'] }}
+                                            @elseif(is_array($habilidade) && isset($habilidade['name']))
+                                                {{ $habilidade['name'] }}
+                                            @else
+                                                {{ $habilidade }}
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -190,7 +206,7 @@
                                 <p class="text-[10px] uppercase tracking-[0.35em] text-red-400">estatísticas</p>
                                 <div class="mt-3 space-y-2 text-sm text-white whitespace-nowrap">
                                     @foreach ($pokemon['stats'] as $stat)
-                                        <p><span class="text-green-400 uppercase">{{ $stat['stat']['name'] }}:</span> {{ $stat['base_stat'] }}</p>
+                                        <p><span class="text-green-400 uppercase">{{ str_replace('-', ' ', $stat['stat']['name']) }}:</span> {{ $stat['base_stat'] }}</p>
                                     @endforeach
                                 </div>
                             </div>

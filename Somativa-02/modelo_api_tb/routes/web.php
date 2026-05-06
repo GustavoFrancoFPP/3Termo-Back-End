@@ -22,11 +22,6 @@ Route::get('pokemons-all', function () {
     return view('pokemon_all', compact('customPokemons', 'totalCustom'));
 })->name('pokemons.all');
 
-// Rota de pesquisa de pokémon
-Route::get('pokemon/search', function() {
-    return view('pokemon_search');
-})->name('pokemon.search.page');
-
 // Rota unificada - procura no banco primeiro, depois na PokeAPI
 Route::get('pokemon/{identifier}', function ($identifier) {
      // Procurar no banco de dados primeiro

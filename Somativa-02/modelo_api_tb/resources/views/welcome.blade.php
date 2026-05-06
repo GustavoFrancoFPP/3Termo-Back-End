@@ -3,144 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédex - Bem-vindo</title>
+    <title>Pokédex</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Righteous', cursive;
+        }
+        .pokemon-card {
+            border: 4px solid black;
+            box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+            transform: perspective(1000px) rotateX(0deg);
+            transition: all 0.3s ease;
+        }
+        .pokemon-card:hover {
+            transform: perspective(1000px) rotateX(-5deg) translateY(-5px);
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+        .glow-text {
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+        }
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-        
-        @keyframes pulse-glow {
-            0%, 100% { text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
-            50% { text-shadow: 0 0 30px rgba(239, 68, 68, 0.8); }
-        }
-        
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .pokemon-bounce { animation: float 3s ease-in-out infinite; }
-        .pokemon-glow { animation: pulse-glow 2s ease-in-out infinite; }
-        .pokemon-spin { animation: spin-slow 8s linear infinite; }
-        
-        .btn-pokemon {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-pokemon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: left 0.5s;
-        }
-        
-        .btn-pokemon:hover::before {
-            left: 100%;
+        .float-bounce {
+            animation: float 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-red-900 to-black text-white min-h-screen">
+<body class="bg-gradient-to-b from-blue-300 to-blue-200 text-black min-h-screen">
     @include('components.navbar')
     
-    <div class="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <!-- Hero Section -->
-        <div class="text-center mb-16 max-w-3xl">
-            <!-- Pokémon Float Animation -->
-            <div class="mb-8">
-                <div class="text-8xl pokemon-bounce pokemon-glow inline-block">🔴</div>
+    <div class="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-8">
+        <div class="text-center max-w-3xl">
+            <!-- Poké Ball Animada -->
+            <div class="text-8xl mb-6 drop-shadow-lg float-bounce">🔴</div>
+            
+            <!-- Título Pokémon -->
+            <h1 class="text-6xl font-black mb-4 glow-text" style="color: #FFCC00; text-shadow: 4px 4px 0px #0033CC, -2px -2px 0px #FF3333;">POKéDEX</h1>
+            
+            <p class="text-xl font-bold text-black mb-4 drop-shadow">Bem-vindo ao mundo dos Pokémons!</p>
+            <p class="text-lg text-gray-800 mb-12 drop-shadow">Busque, capture e crie seus próprios Pokémons</p>
+
+            <!-- Botões Principais - Estilo Pokémon -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <!-- Buscar -->
+                <a href="/pokedex" class="pokemon-card bg-gradient-to-br from-red-600 to-red-700 px-8 py-6 font-black text-2xl text-white border-4 border-black hover:scale-110 transition-all">
+                    🔍<br/>BUSCAR
+                </a>
+
+                <!-- Ver Todos -->
+                <a href="{{ route('pokemons.all') }}" class="pokemon-card bg-gradient-to-br from-yellow-400 to-yellow-500 px-8 py-6 font-black text-2xl text-black border-4 border-black hover:scale-110 transition-all">
+                    📚<br/>TODOS
+                </a>
+
+                <!-- Criar -->
+                <a href="{{ route('pokemon.create') }}" class="pokemon-card bg-gradient-to-br from-green-600 to-green-700 px-8 py-6 font-black text-2xl text-white border-4 border-black hover:scale-110 transition-all">
+                    ➕<br/>CRIAR
+                </a>
+
+                <!-- Meus Pokémons -->
+                <a href="{{ route('pokemons.index') }}" class="pokemon-card bg-gradient-to-br from-purple-600 to-purple-700 px-8 py-6 font-black text-2xl text-white border-4 border-black hover:scale-110 transition-all">
+                    ✨<br/>MEUS
+                </a>
             </div>
-            
-            <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-yellow-400">
-                Pokédex
-            </h1>
-            
-            <p class="text-xl text-gray-300 mb-2">Bem-vindo ao mundo dos Pokémons</p>
-            <p class="text-gray-400">Explore, busque ou crie seus próprios Pokémons</p>
-        </div>
 
-        <!-- Botões Principais (Grid 2x2 simplificado) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl w-full mb-16">
-            <!-- Pokédex Completa (Principal) -->
-            <a href="{{ route('pokemons.all') }}" class="btn-pokemon group bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 rounded-2xl p-8 transition-all duration-300 transform hover:scale-110 shadow-2xl">
-                <div class="text-6xl mb-4 group-hover:scale-125 transition-transform">📚</div>
-                <h2 class="text-3xl font-bold mb-3">Pokédex</h2>
-                <p class="text-gray-100 text-lg">Todos os 1025+ Pokémons</p>
-                <div class="mt-4 text-sm text-purple-200">Customizados + PokeAPI</div>
-            </a>
-
-            <!-- Buscar Pokémon (Principal) -->
-            <a href="/pokemon/search" class="btn-pokemon group bg-gradient-to-br from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 rounded-2xl p-8 transition-all duration-300 transform hover:scale-110 shadow-2xl">
-                <div class="text-6xl mb-4 group-hover:scale-125 transition-transform">🔍</div>
-                <h2 class="text-3xl font-bold mb-3">Buscar</h2>
-                <p class="text-gray-100 text-lg">Procure por ID ou Nome</p>
-                <div class="mt-4 text-sm text-red-200">Rápido e Fácil</div>
-            </a>
-
-            <!-- Meus Pokémons -->
-            <a href="{{ route('pokemons.index') }}" class="btn-pokemon group bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 rounded-2xl p-8 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                <div class="text-5xl mb-4 group-hover:scale-125 transition-transform">✨</div>
-                <h2 class="text-2xl font-bold mb-2">Meus Pokémons</h2>
-                <p class="text-gray-100">Pokémons Criados</p>
-            </a>
-
-            <!-- Criar Pokémon -->
-            <a href="{{ route('pokemon.create') }}" class="btn-pokemon group bg-gradient-to-br from-green-600 to-green-800 hover:from-green-500 hover:to-green-700 rounded-2xl p-8 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                <div class="text-5xl mb-4 group-hover:scale-125 transition-transform">➕</div>
-                <h2 class="text-2xl font-bold mb-2">Criar</h2>
-                <p class="text-gray-100">Novo Pokémon</p>
-            </a>
-        </div>
-
-        <!-- Pokémons em Destaque -->
-        <div class="w-full max-w-4xl">
-            <h3 class="text-2xl font-bold text-center mb-8 text-gray-200">Pokémons Populares</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="/pokemon/pikachu" class="group bg-gray-800 hover:bg-gray-700 border-2 border-gray-700 hover:border-yellow-500 rounded-lg p-4 transition-all text-center transform hover:scale-105">
-                    <div class="text-5xl mb-3 group-hover:pokemon-bounce">⚡</div>
-                    <p class="font-bold text-lg">Pikachu</p>
-                    <p class="text-gray-400 text-sm">#25</p>
-                </a>
-                <a href="/pokemon/1" class="group bg-gray-800 hover:bg-gray-700 border-2 border-gray-700 hover:border-green-500 rounded-lg p-4 transition-all text-center transform hover:scale-105">
-                    <div class="text-5xl mb-3 group-hover:pokemon-bounce">🌱</div>
-                    <p class="font-bold text-lg">Bulbassauro</p>
-                    <p class="text-gray-400 text-sm">#1</p>
-                </a>
-                <a href="/pokemon/charizard" class="group bg-gray-800 hover:bg-gray-700 border-2 border-gray-700 hover:border-orange-500 rounded-lg p-4 transition-all text-center transform hover:scale-105">
-                    <div class="text-5xl mb-3 group-hover:pokemon-bounce">🔥</div>
-                    <p class="font-bold text-lg">Charizard</p>
-                    <p class="text-gray-400 text-sm">#6</p>
-                </a>
-                <a href="/pokemon/dragonite" class="group bg-gray-800 hover:bg-gray-700 border-2 border-gray-700 hover:border-indigo-500 rounded-lg p-4 transition-all text-center transform hover:scale-105">
-                    <div class="text-5xl mb-3 group-hover:pokemon-bounce">🐉</div>
-                    <p class="font-bold text-lg">Dragonite</p>
-                    <p class="text-gray-400 text-sm">#149</p>
-                </a>
+            <!-- Pokémons Iniciais -->
+            <div class="mt-16 pt-8 border-t-4 border-black">
+                <p class="text-2xl font-black mb-6 glow-text">POKÉMONS INICIAIS</p>
+                <div class="flex justify-center gap-8 flex-wrap">
+                    <div class="pokemon-card bg-white p-4 w-24">
+                        <div class="text-4xl mb-2">🌱</div>
+                        <p class="font-black text-sm">Bulbassauro</p>
+                        <p class="text-xs text-gray-600">#001</p>
+                    </div>
+                    <div class="pokemon-card bg-white p-4 w-24">
+                        <div class="text-4xl mb-2">🔥</div>
+                        <p class="font-black text-sm">Charmander</p>
+                        <p class="text-xs text-gray-600">#004</p>
+                    </div>
+                    <div class="pokemon-card bg-white p-4 w-24">
+                        <div class="text-4xl mb-2">💧</div>
+                        <p class="font-black text-sm">Squirtle</p>
+                        <p class="text-xs text-gray-600">#007</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 bg-opacity-80 border-t border-gray-800 mt-20 py-6 text-center text-gray-500">
-        <p>🎮 Pokédex - Desenvolvido com ❤️ usando Laravel</p>
-    </footer>
-
-    <script>
-        // Efeito hover adicional nos botões
-        document.querySelectorAll('.btn-pokemon').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.1)';
-            });
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-            });
-        });
-    </script>
 </body>
 </html>
